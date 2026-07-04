@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>House Price Predictor</title>
+
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+
+<body class="bg-dark">
+
+<div class="container">
+    <div class="row">
+        <div class="card" style="width: 100%; height: 100%; margin-top: 50px">
+
+            <div class="card-header" style="text-align: center">
+                <h1>Welcome to House Price Predictor</h1>
+            </div>
+
+            <div class="card-body">
+
+                <form method="post" id="ModelForm" name="ModelForm">
+
+                    <div class="row">
+
+                        <div class="col-md-6 form-group" style="text-align: center">
+                            <label for="location"><b>Select the Location:</b></label>
+                            <select class="form-control" id="location" name="location" required>
+                                <option value="">Select Location</option>
+                                {% for location in locations %}
+                                <option value="{{ location }}">{{ location }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 form-group" style="text-align: center">
+                            <label for="bhk"><b>Enter BHK:</b></label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="bhk"
+                                   name="bhk"
+                                   placeholder="Enter BHK"
+                                   required>
+                        </div>
+
+                        <div class="col-md-6 form-group" style="text-align: center">
+                            <label for="bath"><b>Enter Number of Bathrooms:</b></label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="bath"
+                                   name="bath"
+                                   placeholder="Enter Number of Bathrooms"
+                                   required>
+                        </div>
+
+                        <div class="col-md-6 form-group" style="text-align: center">
+                            <label for="sqft"><b>Enter Square Feet:</b></label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="sqft"
+                                   name="sqft"
+                                   placeholder="Enter Square Feet"
+                                   required>
+                        </div>
+
+                        <div class="col-md-12 form-group" style="text-align: center">
+                            <button type="submit" class="btn btn-primary form-control">
+                                Predict Price
+                            </button>
+                        </div>
+
+                    </div>
+
+                </form>
+
+                <br>
+
+                <div class="col-12" style="text-align: center">
+                    <h3>
+                        <span id="prediction"></span>
+                    </h3>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("ModelForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        var formData = new FormData(this);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/predict", true);
+
+        document.getElementById("prediction").innerHTML = "Wait! Predicting Price...";
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                document.getElementById("prediction").innerHTML =
+                    "Prediction: ₹" + xhr.responseText;
+            }
+        };
+
+        xhr.send(formData);
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>
